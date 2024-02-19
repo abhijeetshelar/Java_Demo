@@ -2,16 +2,12 @@ trigger:
 - main
 
 pool:
-  vmImage: 'ubuntu-latest'
+  name:Default
 
 jobs:
 - job: BuildAndTest
   displayName: 'Build and Test Java Application'
   steps:
-  - task: UseJavaVersion@1
-    inputs:
-      versionSpec: '1.8'  # Specify the Java version you want to use
-
   - task: Maven@3
     inputs:
       mavenPomFile: 'pom.xml'  # Path to your Maven project file
