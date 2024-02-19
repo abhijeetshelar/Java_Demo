@@ -1,21 +1,30 @@
-# Maven
-# Build your Java project and run tests with Apache Maven.
-# Add steps that analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/java
-
 trigger:
 - main
 
 pool:
-  name: Default
-steps:
-- task: Maven@3
-  inputs:
-    mavenPomFile: 'pom.xml'
-    mavenOptions: '-Xmx3072m'
-    javaHomeOption: 'JDKVersion'
-    jdkVersionOption: '1.8'
-    jdkArchitectureOption: 'x64'
-    publishJUnitResults: true
-    testResultsFiles: '**/surefire-reports/TEST-*.xml'
-    goals: 'package'
+  vmImage: 'ubuntu-latest'
+
+jobs:
+- job: BuildAndTest
+  displayName: 'Build and Test Java Application'
+  steps:
+  - task: UseJavaVersion@1
+    inputs:
+      versionSpec: '11'  # Specify the Java version you want to use
+
+  - task: Maven@3
+    inputs:
+      mavenPomFile: 'pom.xml'  # Path to your Maven project file
+      goals: 'clean install'   # Maven goals to execute
+      options: '-Xmx3072m'      # Optional Maven options
+
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFiles: '**/surefire-reports/TEST-*.xml'
+      testRunTitle: 'JUnit Tests'
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathToPublish: '$(System.DefaultWorkingDirectory)/target'
+      artifactName: 'drop'
+      publishLocation: 'Container'
