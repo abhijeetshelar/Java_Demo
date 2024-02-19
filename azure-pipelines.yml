@@ -10,7 +10,7 @@ jobs:
   steps:
   - task: UseJavaVersion@1
     inputs:
-      versionSpec: '11'  # Specify the Java version you want to use
+      versionSpec: '1.8'  # Specify the Java version you want to use
 
   - task: Maven@3
     inputs:
